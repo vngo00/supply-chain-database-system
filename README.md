@@ -16,7 +16,7 @@ A random database topic will be assigned by the instructor to all the students. 
 
 |       Topic Description        |              Date Assigned                 |
 | ------------------------------ | ------------------------------------------ |
-| Write your database topic here | Write the date the topic was assigned here |
+|     Manufacturing Industry     |               06/07/2024                   |
 
 
 All the work in this course is divided into two milestones, each of them has several checkpoints. Checkpoints are cumulative work. That's it, all checkpoints 
