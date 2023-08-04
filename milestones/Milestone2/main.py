@@ -8,7 +8,7 @@ import os
 import discord
 from discord.ext import commands
 from models import *
-from database import Database
+from database import *
 
 TOKEN = os.environ["DISCORD_TOKEN"]
 intents = discord.Intents.all()
@@ -38,55 +38,100 @@ async def _test(ctx):
 #       (3) Implement your commands' methods.
 
 
-@bot.command(name="cmd_1", description="database business requirement #1 here")
-async def _command1(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+@bot.command(name="products_by_units",
+             description="# retrieve a list of products that have at least # units in inventory")
+async def _command1(ctx, args):
+  products = Product.get_products_by_unit(args)
+  response = "Name    |   Quantity\n"
+  for product in products:
+    response += product.name + "    |    " + str(product.quantity) + "\n"
+  await ctx.send(response)
 
 
-@bot.command(name="cmd_2", description="database business requirement #2 here")
-async def _command2(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+@bot.command(name="customers_by_orders", description="return a list of customer who have made more than # purchases")
+async def _command2(ctx, orders):
+  customers = Customer.get(orders)
+  reponse = "Name:\n"
+  for customer in customer:
+    reponse += customer.name + "\n"
+  await ctx.send(response)
 
 
-@bot.command(name="cmd_3", description="database business requirement #3 here")
-async def _command3(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+@bot.command(name="suppliers", description="Return a list of suppliers order by the number of agreements in descending order")
+async def _command3(ctx):
+  suppliers = Supplier.all()
+  response = "name     |       agreements\n"
+  for supplier in suppliers:
+    response += supplier.name + "      |      " + str(supplier.agreements) +"\n"
+    
+  await ctx.send(response)
 
 
-@bot.command(name="cmd_4", description="database business requirement #4 here")
-async def _command4(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+@bot.command(name="add_agreement", description="Add a new agreement for a specific supplier")
+async def _command4(ctx, name):
+  response = Supplier.add(name)
+  if not response:
+    response = "error"
+  await ctx.send(response)
 
 
-@bot.command(name="cmd_5", description="database business requirement #5 here")
-async def _command5(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+@bot.command(name="delete_agreements", description="Delete all agreements from a specific supplier")
+async def _command5(ctx, name):
+  response = Supplier.delete_agreements(name)
+  if not response:
+    response = "error"
+  await ctx.send(response)
 
 
-@bot.command(name="cmd_6", description="database business requirement #6 here")
-async def _command6(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+@bot.command(name="delete_inventory", description="Delete all inventory records for a specific product")
+async def _command6(ctx, name):
+  response = Product.del_inventory(name)
+  if not response:
+    response = "error"
+  await ctx.send(response)
 
 
-@bot.command(name="cmd_7", description="database business requirement #7 here")
+@bot.command(name="update_price", description="update the prices of products based on a specified pricing rule")
 async def _command7(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+  response = Product.update_price(args[0], args[1])
+  if not response:
+    response = "error"
+  await ctx.send(response)
 
 
-@bot.command(name="cmd_8", description="database business requirement #8 here")
-async def _command8(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+@bot.command(name="products", description="list all products")
+async def _command8(ctx):
+  products = Product.all()
+
+  response = ""
+  if not products:
+    response = "error"
+  response = "Name      |        Description\n"
+  for product in products:
+    response += product.name + "    |      " + str(product.description) + "\n"
+  await ctx.send(response)
 
 
-@bot.command(name="cmd_9", description="database business requirement #9 here")
+@bot.command(name="add_product", description="add product")
 async def _command9(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+  response = Product.add(args[0], args[1])
+  if not response:
+    response = "error"
+  await ctx.send(response)
 
 
-@bot.command(name="cmd_10",
-             description="database business requirement #10 here")
-async def _command10(ctx, *args):
-  await ctx.send("This method is not implemented yet")
+@bot.command(name="customers",
+             description="list all customers")
+async def _command10(ctx):
+  customers = Customer.all()
+
+  response = ""
+  if not customers:
+    response = "error"
+  response = "Name\n"
+  for customer in customers:
+    response += customer.name +"\n"
+  await ctx.send(response)
 
 
 @bot.command(name="cmd_11",
@@ -117,6 +162,7 @@ async def _command14(ctx, *args):
              description="database business requirement #15 here")
 async def _command15(ctx, *args):
   await ctx.send("This method is not implemented yet")
+
 
 
 bot.run(TOKEN)
